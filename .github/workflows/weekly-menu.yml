@@ -1,0 +1,84 @@
+name: Weekly Lunch Menu
+
+on:
+  workflow_dispatch:
+    inputs:
+      week_start:
+        description: "Optional Monday YYYY-MM-DD; blank = next Monday"
+        required: false
+        type: string
+      publish:
+        description: "Publish to Instagram after generation"
+        required: true
+        default: false
+        type: boolean
+  schedule:
+    # Sunday 17:00 UTC. Adjust once you choose your final posting time.
+    - cron: "0 17 * * 0"
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    env:
+      HEP_ORG_ID: "2221"
+      HEP_SITE_ID: "14158"
+      HEP_MENU_ID: "125015"
+      WEEK_START: ${{ inputs.week_start || '' }}
+      DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.publish && 'false' || 'true' }}
+      INSTAGRAM_ACCESS_TOKEN: ${{ secrets.INSTAGRAM_ACCESS_TOKEN }}
+      INSTAGRAM_USER_ID: ${{ secrets.INSTAGRAM_USER_ID }}
+      CAPTION_PREFIX: "GAWHS Weekly Lunch Menu"
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt pytest
+
+      - name: Run tests
+        run: pytest -q
+
+      - name: Generate weekly menu images
+        run: python -m src.main
+        env:
+          # Always generate first without publishing. Publishing happens only after
+          # the generated JPGs are committed and publicly reachable.
+          DRY_RUN: "true"
+
+      - name: Upload preview artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: weekly-menu-preview
+          path: |
+            generated/*.jpg
+            generated/menu.json
+
+      - name: Commit generated images for public Meta URLs
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.publish }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f generated/*.jpg generated/menu.json
+          git commit -m "Generate weekly menu assets" || true
+          git push
+          echo "PUBLIC_IMAGE_REF=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+
+      - name: Publish Instagram carousel
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.publish }}
+        run: python -m src.main
+        env:
+          DRY_RUN: "false"
+          PUBLIC_IMAGE_REF: ${{ env.PUBLIC_IMAGE_REF }}
+
+      - name: Scheduled run is preview-only until explicitly enabled
+        if: ${{ github.event_name == 'schedule' }}
+        run: echo "Scheduled generation succeeded. Live publishing is intentionally disabled until Meta credentials are tested."
