@@ -13,6 +13,7 @@ BACKGROUNDS = ROOT / "assets" / "backgrounds"
 GENERATED = ROOT / "generated"
 GREEN = (39, 112, 66)
 ORANGE = (196, 96, 34)
+CREAM = (250, 243, 231)
 
 
 def _font(size: int, bold: bool = True) -> ImageFont.FreeTypeFont | ImageFont.ImageFont:
@@ -83,6 +84,22 @@ def _category_order(categories: dict[str, list[str]]) -> list[tuple[str, list[st
     return result
 
 
+def _clean_daily_template(img: Image.Image, day_name: str) -> None:
+    draw = ImageDraw.Draw(img)
+
+    # Mask leftover old date/page-number text from the original templates.
+    draw.rectangle((790, 70, 1045, 220), fill=CREAM)
+
+    # Mask small clipped caterpillar remnants still present in some backgrounds.
+    artifact_masks = {
+        "tuesday": [(790, 800, 860, 975)],
+        "wednesday": [(790, 255, 885, 415)],
+        "friday": [(895, 245, 1035, 380)],
+    }
+    for box in artifact_masks.get(day_name, []):
+        draw.rectangle(box, fill=CREAM)
+
+
 def render_cover(menu: WeeklyMenu) -> Path:
     img = Image.open(BACKGROUNDS / "cover.png").convert("RGB")
     draw = ImageDraw.Draw(img)
@@ -102,6 +119,7 @@ def render_day(day: MenuDay, index: int) -> Path:
     day_name = day.day.strftime("%A").lower()
     bg = BACKGROUNDS / f"{day_name}.png"
     img = Image.open(bg).convert("RGB")
+    _clean_daily_template(img, day_name)
     draw = ImageDraw.Draw(img)
 
     header = f"{day.day:%A}  {day.day:%m/%d}".upper()
