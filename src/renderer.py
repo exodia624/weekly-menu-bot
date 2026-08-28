@@ -15,12 +15,27 @@ GENERATED = ROOT / "generated"
 GREEN = (39, 112, 66)
 ORANGE = (196, 96, 34)
 
-DATE_BOXES = {
-    "monday": (610, 72, 970, 225),
-    "tuesday": (625, 72, 970, 225),
-    "wednesday": (650, 72, 970, 225),
-    "thursday": (645, 72, 970, 225),
-    "friday": (520, 72, 970, 225),
+HEADER_BOXES = {
+    "monday": {
+        "weekday": (90, 65, 590, 225),
+        "date": (610, 65, 970, 225),
+    },
+    "tuesday": {
+        "weekday": (90, 65, 610, 225),
+        "date": (630, 65, 970, 225),
+    },
+    "wednesday": {
+        "weekday": (90, 65, 650, 225),
+        "date": (665, 65, 970, 225),
+    },
+    "thursday": {
+        "weekday": (90, 65, 635, 225),
+        "date": (650, 65, 970, 225),
+    },
+    "friday": {
+        "weekday": (90, 65, 500, 225),
+        "date": (520, 65, 970, 225),
+    },
 }
 
 
@@ -297,51 +312,106 @@ def render_day(
 
     draw = ImageDraw.Draw(img)
 
+    weekday_text = day.day.strftime("%A").upper()
     date_text = f"{day.day:%m/%d}"
 
-    # Use the actual background color from the slide,
-    # then fully cover the old 00/00 placeholder.
     background = img.getpixel((720, 245))
 
+    weekday_box = HEADER_BOXES[day_name]["weekday"]
+    date_box = HEADER_BOXES[day_name]["date"]
+
+    # Clear both Canva header areas.
     draw.rectangle(
-        DATE_BOXES[day_name],
+        weekday_box,
         fill=background,
     )
-
-    date_box = DATE_BOXES[day_name]
-
-    background = img.getpixel((720, 245))
 
     draw.rectangle(
         date_box,
         fill=background,
     )
 
-    box_width = date_box[2] - date_box[0]
+    weekday_width = weekday_box[2] - weekday_box[0]
+    weekday_height = weekday_box[3] - weekday_box[1]
 
-    date_font = _fit_font(
+    date_width = date_box[2] - date_box[0]
+    date_height = date_box[3] - date_box[1]
+
+    weekday_font = _fit_font(
         draw,
-        date_text,
-        max_width=box_width - 20,
-        start=92,
+        weekday_text,
+        max_width=weekday_width - 20,
+        start=104,
         minimum=54,
     )
 
-    bbox = draw.textbbox(
+    date_font = _fit_font(
+        raw,
+        date_text,
+        max_width=date_width - 20,
+        start=104,
+        minimum=54,
+    )
+
+    weekday_bbox = draw.textbbox(
+        (0, 0),
+        weekday_text,
+        font=weekday_font,
+    )
+
+    date_bbox = draw.textbbox(
         (0, 0),
         date_text,
         font=date_font,
     )
 
-    text_width = bbox[2] - bbox[0]
+    weekday_text_width = (
+        weekday_bbox[2] - weekday_bbox[0]
+    )
+
+    weekday_text_height = (
+        weekday_bbox[3] - weekday_bbox[1]
+    )
+
+    date_text_width = (
+        date_bbox[2] - date_bbox[0]
+    )
+
+    date_text_height = (
+        date_bbox[3] - date_bbox[1]
+    )
+
+    weekday_x = (
+        weekday_box[0]
+        + (weekday_width - weekday_text_width) // 2
+    )
+
+    weekday_y = (
+        weekday_box[1]
+        + (weekday_height - weekday_text_height) // 2
+        - 8
+    )
 
     date_x = (
         date_box[0]
-        + (box_width - text_width) // 2
+        + (date_width - date_text_width) // 2
+    )
+
+    date_y = (
+        date_box[1]
+        + (date_height - date_text_height) // 2
+        - 8
     )
 
     draw.text(
-        (date_x, 82),
+        (weekday_x, weekday_y),
+        weekday_text,
+        font=weekday_font,
+        fill=GREEN,
+    )
+
+    draw.text(
+        (date_x, date_y),
         date_text,
         font=date_font,
         fill=GREEN,
