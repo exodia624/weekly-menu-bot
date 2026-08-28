@@ -68,7 +68,12 @@ def _fit_font(
 ) -> ImageFont.ImageFont:
     for size in range(start, minimum - 1, -2):
         font = _font(size)
-        bbox = draw.textbbox((0, 0), text, font=font)
+
+        bbox = draw.textbbox(
+            (0, 0),
+            text,
+            font=font,
+        )
 
         if bbox[2] - bbox[0] <= max_width:
             return font
@@ -92,7 +97,12 @@ def _wrap(
 
     for word in words[1:]:
         trial = f"{line} {word}"
-        bbox = draw.textbbox((0, 0), trial, font=font)
+
+        bbox = draw.textbbox(
+            (0, 0),
+            trial,
+            font=font,
+        )
 
         if bbox[2] - bbox[0] <= width:
             line = trial
@@ -115,7 +125,12 @@ def _draw_bullets(
     line_gap: int,
 ) -> int:
     font = _font(size)
-    bullet_indent = max(24, size + 3)
+
+    bullet_indent = max(
+        24,
+        size + 3,
+    )
+
     line_height = size + 5
 
     for item in items:
@@ -166,12 +181,17 @@ def _category_order(
     for preferred_name in preferred:
         for key, value in categories.items():
             if key.lower() == preferred_name.lower():
-                result.append((key, value))
+                result.append(
+                    (key, value)
+                )
+
                 used.add(key)
 
     for key, value in categories.items():
         if key not in used:
-            result.append((key, value))
+            result.append(
+                (key, value)
+            )
 
     return result
 
@@ -186,8 +206,14 @@ def _measure_menu_height(
     category_gap: int,
 ) -> int:
     total = 0
+
     item_font = _font(item_size)
-    bullet_indent = max(24, item_size + 3)
+
+    bullet_indent = max(
+        24,
+        item_size + 3,
+    )
+
     line_height = item_size + 3
 
     for _, items in categories:
@@ -202,7 +228,8 @@ def _measure_menu_height(
             )
 
             total += (
-                max(1, len(lines)) * line_height
+                max(1, len(lines))
+                * line_height
                 + line_gap
             )
 
@@ -217,10 +244,22 @@ def _menu_style(
     width: int,
     available_height: int,
 ) -> tuple[int, int, int, int]:
-    for item_size in range(27, 17, -1):
+    for item_size in range(
+        27,
+        17,
+        -1,
+    ):
         heading_size = item_size + 10
-        line_gap = max(3, item_size // 4)
-        category_gap = max(8, item_size // 2)
+
+        line_gap = max(
+            3,
+            item_size // 4,
+        )
+
+        category_gap = max(
+            8,
+            item_size // 2,
+        )
 
         height = _measure_menu_height(
             draw,
@@ -243,26 +282,77 @@ def _menu_style(
     return 18, 26, 2, 5
 
 
-def render_cover(menu: WeeklyMenu) -> Path:
+def _center_text_in_box(
+    draw: ImageDraw.ImageDraw,
+    text: str,
+    box: tuple[int, int, int, int],
+    font: ImageFont.ImageFont,
+    y_offset: int = -8,
+) -> tuple[int, int]:
+    bbox = draw.textbbox(
+        (0, 0),
+        text,
+        font=font,
+    )
+
+    text_width = (
+        bbox[2]
+        - bbox[0]
+    )
+
+    text_height = (
+        bbox[3]
+        - bbox[1]
+    )
+
+    box_width = (
+        box[2]
+        - box[0]
+    )
+
+    box_height = (
+        box[3]
+        - box[1]
+    )
+
+    x = (
+        box[0]
+        + (
+            box_width
+            - text_width
+        )
+        // 2
+    )
+
+    y = (
+        box[1]
+        + (
+            box_height
+            - text_height
+        )
+        // 2
+        + y_offset
+    )
+
+    return x, y
+
+
+def render_cover(
+    menu: WeeklyMenu,
+) -> Path:
     img = Image.open(
-        BACKGROUNDS / "cover.png"
+        BACKGROUNDS
+        / "cover.png"
     ).convert("RGB")
 
     draw = ImageDraw.Draw(img)
 
     friday = menu.days[-1].day
+
     label = (
-        f"{menu.monday:%m/%d} - "
+        f"{menu.monday:%m/%d}"
+        f" - "
         f"{friday:%m/%d}"
-    )
-
-    # Sample the actual Canva background color
-    # instead of using a guessed cream.
-    background = img.getpixel((540, 410))
-
-    draw.rectangle(
-        (240, 280, 850, 390),
-        fill=background,
     )
 
     font = _fit_font(
@@ -279,8 +369,15 @@ def render_cover(menu: WeeklyMenu) -> Path:
         font=font,
     )
 
-    text_width = bbox[2] - bbox[0]
-    x = (img.width - text_width) // 2
+    text_width = (
+        bbox[2]
+        - bbox[0]
+    )
+
+    x = (
+        img.width
+        - text_width
+    ) // 2
 
     draw.text(
         (x, 292),
@@ -289,7 +386,10 @@ def render_cover(menu: WeeklyMenu) -> Path:
         fill=GREEN,
     )
 
-    path = GENERATED / "01-cover.jpg"
+    path = (
+        GENERATED
+        / "01-cover.jpg"
+    )
 
     img.save(
         path,
@@ -304,38 +404,50 @@ def render_day(
     day: MenuDay,
     index: int,
 ) -> Path:
-    day_name = day.day.strftime("%A").lower()
+    day_name = (
+        day.day
+        .strftime("%A")
+        .lower()
+    )
 
     img = Image.open(
-        BACKGROUNDS / f"{day_name}.png"
+        BACKGROUNDS
+        / f"{day_name}.png"
     ).convert("RGB")
 
     draw = ImageDraw.Draw(img)
 
-    weekday_text = day.day.strftime("%A").upper()
-    date_text = f"{day.day:%m/%d}"
-
-    background = img.getpixel((720, 245))
-
-    weekday_box = HEADER_BOXES[day_name]["weekday"]
-    date_box = HEADER_BOXES[day_name]["date"]
-
-    # Clear both Canva header areas.
-    draw.rectangle(
-        weekday_box,
-        fill=background,
+    weekday_text = (
+        day.day
+        .strftime("%A")
+        .upper()
     )
 
-    draw.rectangle(
-        date_box,
-        fill=background,
+    date_text = (
+        f"{day.day:%m/%d}"
     )
 
-    weekday_width = weekday_box[2] - weekday_box[0]
-    weekday_height = weekday_box[3] - weekday_box[1]
+    weekday_box = (
+        HEADER_BOXES[
+            day_name
+        ]["weekday"]
+    )
 
-    date_width = date_box[2] - date_box[0]
-    date_height = date_box[3] - date_box[1]
+    date_box = (
+        HEADER_BOXES[
+            day_name
+        ]["date"]
+    )
+
+    weekday_width = (
+        weekday_box[2]
+        - weekday_box[0]
+    )
+
+    date_width = (
+        date_box[2]
+        - date_box[0]
+    )
 
     weekday_font = _fit_font(
         draw,
@@ -353,65 +465,41 @@ def render_day(
         minimum=54,
     )
 
-    weekday_bbox = draw.textbbox(
-        (0, 0),
+    (
+        weekday_x,
+        weekday_y,
+    ) = _center_text_in_box(
+        draw,
         weekday_text,
-        font=weekday_font,
+        weekday_box,
+        weekday_font,
     )
 
-    date_bbox = draw.textbbox(
-        (0, 0),
+    (
+        date_x,
+        date_y,
+    ) = _center_text_in_box(
+        draw,
         date_text,
-        font=date_font,
-    )
-
-    weekday_text_width = (
-        weekday_bbox[2] - weekday_bbox[0]
-    )
-
-    weekday_text_height = (
-        weekday_bbox[3] - weekday_bbox[1]
-    )
-
-    date_text_width = (
-        date_bbox[2] - date_bbox[0]
-    )
-
-    date_text_height = (
-        date_bbox[3] - date_bbox[1]
-    )
-
-    weekday_x = (
-        weekday_box[0]
-        + (weekday_width - weekday_text_width) // 2
-    )
-
-    weekday_y = (
-        weekday_box[1]
-        + (weekday_height - weekday_text_height) // 2
-        - 8
-    )
-
-    date_x = (
-        date_box[0]
-        + (date_width - date_text_width) // 2
-    )
-
-    date_y = (
-        date_box[1]
-        + (date_height - date_text_height) // 2
-        - 8
+        date_box,
+        date_font,
     )
 
     draw.text(
-        (weekday_x, weekday_y),
+        (
+            weekday_x,
+            weekday_y,
+        ),
         weekday_text,
         font=weekday_font,
         fill=GREEN,
     )
 
     draw.text(
-        (date_x, date_y),
+        (
+            date_x,
+            date_y,
+        ),
         date_text,
         font=date_font,
         fill=GREEN,
@@ -447,8 +535,10 @@ def render_day(
         )
 
     else:
-        categories = _category_order(
-            day.categories
+        categories = (
+            _category_order(
+                day.categories
+            )
         )
 
         start_y = 275
@@ -473,11 +563,16 @@ def render_day(
             draw.text(
                 (105, y),
                 category.upper(),
-                font=_font(heading_size),
+                font=_font(
+                    heading_size
+                ),
                 fill=ORANGE,
             )
 
-            y += heading_size + 12
+            y += (
+                heading_size
+                + 12
+            )
 
             y = _draw_bullets(
                 draw,
@@ -491,8 +586,12 @@ def render_day(
 
             y += category_gap
 
-    path = GENERATED / (
-        f"{index:02d}-{day_name}.jpg"
+    path = (
+        GENERATED
+        / (
+            f"{index:02d}-"
+            f"{day_name}.jpg"
+        )
     )
 
     img.save(
@@ -507,9 +606,13 @@ def render_day(
 def render_week(
     menu: WeeklyMenu,
 ) -> list[Path]:
-    GENERATED.mkdir(exist_ok=True)
+    GENERATED.mkdir(
+        exist_ok=True
+    )
 
-    for old in GENERATED.glob("*.jpg"):
+    for old in GENERATED.glob(
+        "*.jpg"
+    ):
         old.unlink()
 
     paths = [
@@ -521,7 +624,10 @@ def render_week(
         start=2,
     ):
         paths.append(
-            render_day(day, i)
+            render_day(
+                day,
+                i,
+            )
         )
 
     return paths
