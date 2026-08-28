@@ -346,7 +346,7 @@ def render_day(
     )
 
     date_font = _fit_font(
-        raw,
+        draw,
         date_text,
         max_width=date_width - 20,
         start=104,
