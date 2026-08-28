@@ -14,7 +14,14 @@ GENERATED = ROOT / "generated"
 
 GREEN = (39, 112, 66)
 ORANGE = (196, 96, 34)
-CREAM = (255, 248, 238)
+
+DATE_BOXES = {
+    "monday": (585, 78, 990, 220),
+    "tuesday": (575, 78, 990, 220),
+    "wednesday": (600, 78, 990, 220),
+    "thursday": (600, 78, 990, 220),
+    "friday": (500, 78, 990, 220),
+}
 
 
 def _font(
@@ -47,9 +54,8 @@ def _fit_font(
     for size in range(start, minimum - 1, -2):
         font = _font(size)
         bbox = draw.textbbox((0, 0), text, font=font)
-        width = bbox[2] - bbox[0]
 
-        if width <= max_width:
+        if bbox[2] - bbox[0] <= max_width:
             return font
 
     return _font(minimum)
@@ -90,11 +96,12 @@ def _draw_bullets(
     x: int,
     y: int,
     width: int,
-    size: int = 29,
+    size: int,
+    line_gap: int,
 ) -> int:
     font = _font(size)
-    bullet_indent = 34
-    line_gap = 7
+    bullet_indent = max(24, size + 3)
+    line_height = size + 3
 
     for item in items:
         lines = _wrap(
@@ -122,7 +129,7 @@ def _draw_bullets(
                 fill=ORANGE,
             )
 
-            y += size + 4
+            y += line_height
 
         y += line_gap
 
@@ -154,6 +161,73 @@ def _category_order(
     return result
 
 
+def _measure_menu_height(
+    draw: ImageDraw.ImageDraw,
+    categories: list[tuple[str, list[str]]],
+    width: int,
+    item_size: int,
+    heading_size: int,
+    line_gap: int,
+    category_gap: int,
+) -> int:
+    total = 0
+    item_font = _font(item_size)
+    bullet_indent = max(24, item_size + 3)
+    line_height = item_size + 3
+
+    for _, items in categories:
+        total += heading_size + 12
+
+        for item in items:
+            lines = _wrap(
+                draw,
+                item,
+                item_font,
+                width - bullet_indent,
+            )
+
+            total += (
+                max(1, len(lines)) * line_height
+                + line_gap
+            )
+
+        total += category_gap
+
+    return total
+
+
+def _menu_style(
+    draw: ImageDraw.ImageDraw,
+    categories: list[tuple[str, list[str]]],
+    width: int,
+    available_height: int,
+) -> tuple[int, int, int, int]:
+    for item_size in range(28, 17, -1):
+        heading_size = item_size + 8
+        line_gap = max(2, item_size // 5)
+        category_gap = max(5, item_size // 2)
+
+        height = _measure_menu_height(
+            draw,
+            categories,
+            width,
+            item_size,
+            heading_size,
+            line_gap,
+            category_gap,
+        )
+
+        if height <= available_height:
+            return (
+                item_size,
+                heading_size,
+                line_gap,
+                category_gap,
+            )
+
+    return 18, 26, 2, 5
+
+
 def render_cover(menu: WeeklyMenu) -> Path:
     img = Image.open(
         BACKGROUNDS / "cover.png"
@@ -162,16 +236,18 @@ def render_cover(menu: WeeklyMenu) -> Path:
     draw = ImageDraw.Draw(img)
 
     friday = menu.days[-1].day
-
     label = (
         f"{menu.monday:%m/%d} - "
         f"{friday:%m/%d}"
     )
 
-    # Remove the Canva placeholder date.
+    # Sample the actual Canva background color
+    # instead of using a guessed cream.
+    background = img.getpixel((540, 410))
+
     draw.rectangle(
-        (250, 285, 835, 385),
-        fill=CREAM,
+        (240, 280, 850, 390),
+        fill=background,
     )
 
     font = _fit_font(
@@ -189,7 +265,6 @@ def render_cover(menu: WeeklyMenu) -> Path:
     )
 
     text_width = bbox[2] - bbox[0]
-
     x = (img.width - text_width) // 2
 
     draw.text(
@@ -222,13 +297,15 @@ def render_day(
 
     draw = ImageDraw.Draw(img)
 
-    # Keep the Canva weekday lettering.
-    # Only replace 00/00 with the real date.
     date_text = f"{day.day:%m/%d}"
 
+    # Use the actual background color from the slide,
+    # then fully cover the old 00/00 placeholder.
+    background = img.getpixel((720, 245))
+
     draw.rectangle(
-        (600, 85, 990, 215),
-        fill=CREAM,
+        DATE_BOXES[day_name],
+        fill=background,
     )
 
     date_font = _fit_font(
@@ -276,35 +353,49 @@ def render_day(
         )
 
     else:
-        y = 275
-
-        for category, items in _category_order(
+        categories = _category_order(
             day.categories
-        ):
-            heading = category.upper()
+        )
 
+        start_y = 275
+        max_y = 1285
+        content_width = 650
+
+        (
+            item_size,
+            heading_size,
+            line_gap,
+            category_gap,
+        ) = _menu_style(
+            draw,
+            categories,
+            content_width,
+            max_y - start_y,
+        )
+
+        y = start_y
+
+        for category, items in categories:
             draw.text(
                 (105, y),
-                heading,
-                font=_font(36),
+                category.upper(),
+                font=_font(heading_size),
                 fill=ORANGE,
             )
 
-            y += 48
+            y += heading_size + 12
 
             y = _draw_bullets(
                 draw,
                 items,
                 x=125,
                 y=y,
-                width=650,
-                size=28,
+                width=content_width,
+                size=item_size,
+                line_gap=line_gap,
             )
 
-            y += 14
-
-            if y > 1230:
-                break
+            y += category_gap
 
     path = GENERATED / (
         f"{index:02d}-{day_name}.jpg"
