@@ -101,7 +101,7 @@ def _draw_bullets(
 ) -> int:
     font = _font(size)
     bullet_indent = max(24, size + 3)
-    line_height = size + 3
+    line_height = size + 5
 
     for item in items:
         lines = _wrap(
@@ -202,10 +202,10 @@ def _menu_style(
     width: int,
     available_height: int,
 ) -> tuple[int, int, int, int]:
-    for item_size in range(28, 17, -1):
-        heading_size = item_size + 8
-        line_gap = max(2, item_size // 5)
-        category_gap = max(5, item_size // 2)
+    for item_size in range(27, 17, -1):
+        heading_size = item_size + 10
+        line_gap = max(3, item_size // 4)
+        category_gap = max(8, item_size // 2)
 
         height = _measure_menu_height(
             draw,
@@ -311,13 +311,13 @@ def render_day(
     date_font = _fit_font(
         draw,
         date_text,
-        max_width=340,
-        start=68,
-        minimum=42,
+        max_width=300,
+        start=60,
+        minimum=38,
     )
 
     draw.text(
-        (650, 92),
+        (655, 96),
         date_text,
         font=date_font,
         fill=GREEN,
