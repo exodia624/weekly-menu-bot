@@ -16,11 +16,11 @@ GREEN = (39, 112, 66)
 ORANGE = (196, 96, 34)
 
 DATE_BOXES = {
-    "monday": (585, 78, 990, 220),
-    "tuesday": (575, 78, 990, 220),
-    "wednesday": (600, 78, 990, 220),
-    "thursday": (600, 78, 990, 220),
-    "friday": (500, 78, 990, 220),
+    "monday": (610, 78, 990, 220),
+    "tuesday": (625, 78, 990, 220),
+    "wednesday": (645, 78, 990, 220),
+    "thursday": (640, 78, 990, 220),
+    "friday": (520, 78, 990, 220),
 }
 
 
@@ -317,7 +317,7 @@ def render_day(
     )
 
     draw.text(
-        (610, 92),
+        (650, 92),
         date_text,
         font=date_font,
         fill=GREEN,
