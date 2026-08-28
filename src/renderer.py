@@ -16,11 +16,11 @@ GREEN = (39, 112, 66)
 ORANGE = (196, 96, 34)
 
 DATE_BOXES = {
-    "monday": (610, 78, 990, 220),
-    "tuesday": (625, 78, 990, 220),
-    "wednesday": (645, 78, 990, 220),
-    "thursday": (640, 78, 990, 220),
-    "friday": (520, 78, 990, 220),
+    "monday": (610, 72, 970, 225),
+    "tuesday": (625, 72, 970, 225),
+    "wednesday": (650, 72, 970, 225),
+    "thursday": (645, 72, 970, 225),
+    "friday": (520, 72, 970, 225),
 }
 
 
@@ -308,16 +308,40 @@ def render_day(
         fill=background,
     )
 
+    date_box = DATE_BOXES[day_name]
+
+    background = img.getpixel((720, 245))
+
+    draw.rectangle(
+        date_box,
+        fill=background,
+    )
+
+    box_width = date_box[2] - date_box[0]
+
     date_font = _fit_font(
         draw,
         date_text,
-        max_width=300,
-        start=60,
-        minimum=38,
+        max_width=box_width - 20,
+        start=92,
+        minimum=54,
+    )
+
+    bbox = draw.textbbox(
+        (0, 0),
+        date_text,
+        font=date_font,
+    )
+
+    text_width = bbox[2] - bbox[0]
+
+    date_x = (
+        date_box[0]
+        + (box_width - text_width) // 2
     )
 
     draw.text(
-        (655, 96),
+        (date_x, 82),
         date_text,
         font=date_font,
         fill=GREEN,
