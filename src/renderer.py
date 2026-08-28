@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 from pathlib import Path
 from typing import Iterable
 
@@ -14,6 +15,17 @@ GENERATED = ROOT / "generated"
 
 GREEN = (39, 112, 66)
 ORANGE = (196, 96, 34)
+
+FOOD_WASTE_FACTS = [
+    "About 24% of the waste sent to U.S. landfills is food.",
+    "About 60% of U.S. wasted food from homes, stores, and food service was landfilled in 2019.",
+    "The U.S. generated about 66 million tons of wasted food in 2019.",
+    "Food waste causes about 58% of methane emissions escaping from U.S. landfills.",
+    "Landfilled food waste produced about 55 million metric tons of CO2-equivalent emissions in 2020.",
+    "Food waste makes up about 24% of landfill waste but causes about 58% of landfill methane emissions.",
+    "The climate impact of U.S. landfilled food waste in 2020 was comparable to the yearly emissions of about 15 coal-fired power plants.",
+    "The climate impact of U.S. landfilled food waste in 2020 was comparable to the yearly energy use of about 7 million homes.",
+]
 
 HEADER_BOXES = {
     "monday": {
@@ -181,17 +193,12 @@ def _category_order(
     for preferred_name in preferred:
         for key, value in categories.items():
             if key.lower() == preferred_name.lower():
-                result.append(
-                    (key, value)
-                )
-
+                result.append((key, value))
                 used.add(key)
 
     for key, value in categories.items():
         if key not in used:
-            result.append(
-                (key, value)
-            )
+            result.append((key, value))
 
     return result
 
@@ -244,11 +251,7 @@ def _menu_style(
     width: int,
     available_height: int,
 ) -> tuple[int, int, int, int]:
-    for item_size in range(
-        27,
-        17,
-        -1,
-    ):
+    for item_size in range(27, 17, -1):
         heading_size = item_size + 10
 
         line_gap = max(
@@ -295,96 +298,207 @@ def _center_text_in_box(
         font=font,
     )
 
-    text_width = (
-        bbox[2]
-        - bbox[0]
-    )
+    text_width = bbox[2] - bbox[0]
+    text_height = bbox[3] - bbox[1]
 
-    text_height = (
-        bbox[3]
-        - bbox[1]
-    )
-
-    box_width = (
-        box[2]
-        - box[0]
-    )
-
-    box_height = (
-        box[3]
-        - box[1]
-    )
+    box_width = box[2] - box[0]
+    box_height = box[3] - box[1]
 
     x = (
         box[0]
-        + (
-            box_width
-            - text_width
-        )
-        // 2
+        + (box_width - text_width) // 2
     )
 
     y = (
         box[1]
-        + (
-            box_height
-            - text_height
-        )
-        // 2
+        + (box_height - text_height) // 2
         + y_offset
     )
 
     return x, y
 
 
+def _weekly_food_fact(
+    menu: WeeklyMenu,
+) -> str:
+    """
+    Pick one stable fact for each week.
+
+    Rerunning the same week gives the same fact,
+    but different weeks rotate through the list.
+    """
+    week_key = menu.monday.isoformat()
+
+    digest = hashlib.sha256(
+        week_key.encode("utf-8")
+    ).digest()
+
+    index = int.from_bytes(
+        digest[:4],
+        "big",
+    ) % len(FOOD_WASTE_FACTS)
+
+    return FOOD_WASTE_FACTS[index]
+
+
 def render_cover(
     menu: WeeklyMenu,
 ) -> Path:
     img = Image.open(
-        BACKGROUNDS
-        / "cover.png"
+        BACKGROUNDS / "cover.png"
     ).convert("RGB")
 
     draw = ImageDraw.Draw(img)
 
     friday = menu.days[-1].day
 
-    label = (
-        f"{menu.monday:%m/%d}"
-        f" - "
+    date_label = (
+        f"{menu.monday:%m/%d} - "
         f"{friday:%m/%d}"
     )
 
-    font = _fit_font(
+    title = "GAWHS MENU"
+
+    title_font = _fit_font(
         draw,
-        label,
-        max_width=580,
-        start=68,
-        minimum=42,
+        title,
+        max_width=850,
+        start=112,
+        minimum=80,
     )
 
-    bbox = draw.textbbox(
+    title_bbox = draw.textbbox(
         (0, 0),
-        label,
-        font=font,
+        title,
+        font=title_font,
     )
 
-    text_width = (
-        bbox[2]
-        - bbox[0]
+    title_width = (
+        title_bbox[2]
+        - title_bbox[0]
     )
 
-    x = (
+    title_x = (
         img.width
-        - text_width
+        - title_width
     ) // 2
 
     draw.text(
-        (x, 292),
-        label,
-        font=font,
+        (title_x, 145),
+        title,
+        font=title_font,
         fill=GREEN,
     )
+
+    date_font = _fit_font(
+        draw,
+        date_label,
+        max_width=600,
+        start=66,
+        minimum=42,
+    )
+
+    date_bbox = draw.textbbox(
+        (0, 0),
+        date_label,
+        font=date_font,
+    )
+
+    date_width = (
+        date_bbox[2]
+        - date_bbox[0]
+    )
+
+    date_x = (
+        img.width
+        - date_width
+    ) // 2
+
+    draw.text(
+        (date_x, 300),
+        date_label,
+        font=date_font,
+        fill=GREEN,
+    )
+
+    did_you_know = "DID YOU KNOW?"
+
+    heading_font = _fit_font(
+        draw,
+        did_you_know,
+        max_width=500,
+        start=48,
+        minimum=34,
+    )
+
+    heading_bbox = draw.textbbox(
+        (0, 0),
+        did_you_know,
+        font=heading_font,
+    )
+
+    heading_width = (
+        heading_bbox[2]
+        - heading_bbox[0]
+    )
+
+    heading_x = (
+        img.width
+        - heading_width
+    ) // 2
+
+    draw.text(
+        (heading_x, 1060),
+        did_you_know,
+        font=heading_font,
+        fill=ORANGE,
+    )
+
+    fact = _weekly_food_fact(menu)
+
+    fact_font = _fit_font(
+        draw,
+        fact,
+        max_width=820,
+        start=34,
+        minimum=24,
+    )
+
+    lines = _wrap(
+        draw,
+        fact,
+        fact_font,
+        820,
+    )
+
+    line_height = 39
+    fact_y = 1125
+
+    for line in lines:
+        bbox = draw.textbbox(
+            (0, 0),
+            line,
+            font=fact_font,
+        )
+
+        line_width = (
+            bbox[2]
+            - bbox[0]
+        )
+
+        x = (
+            img.width
+            - line_width
+        ) // 2
+
+        draw.text(
+            (x, fact_y),
+            line,
+            font=fact_font,
+            fill=ORANGE,
+        )
+
+        fact_y += line_height
 
     path = (
         GENERATED
@@ -535,14 +649,17 @@ def render_day(
         )
 
     else:
-        categories = (
-            _category_order(
-                day.categories
-            )
+        categories = _category_order(
+            day.categories
         )
 
         start_y = 275
-        max_y = 1285
+
+        if day_name == "monday":
+            max_y = 1220
+        else:
+            max_y = 1285
+
         content_width = 650
 
         (
