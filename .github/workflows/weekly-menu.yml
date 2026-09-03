@@ -23,9 +23,9 @@ jobs:
   generate:
     runs-on: ubuntu-latest
     env:
-      HEP_ORG_ID: "2221"
-      HEP_SITE_ID: "14158"
-      HEP_MENU_ID: "125015"
+      HEP_ORG_ID: ${{ secrets.HEP_ORG_ID }}
+      HEP_SITE_ID: ${{ secrets.HEP_SITE_ID }}
+      HEP_MENU_ID: ${{ secrets.HEP_MENU_ID }}
       WEEK_START: ${{ inputs.week_start || '' }}
       DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.publish && 'false' || 'true' }}
       INSTAGRAM_ACCESS_TOKEN: ${{ secrets.INSTAGRAM_ACCESS_TOKEN }}

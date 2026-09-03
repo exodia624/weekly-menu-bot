@@ -18,9 +18,9 @@ class HealthEProError(RuntimeError):
 
 @dataclass(frozen=True)
 class HealthEProConfig:
-    organization_id: int = 2221
-    site_id: int = 14158
-    menu_id: int = 125015
+    organization_id: int
+    site_id: int
+    menu_id: int
 
 
 class HealthEProClient:

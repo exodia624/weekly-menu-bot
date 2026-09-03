@@ -182,22 +182,13 @@ def main() -> None:
 
     cfg = HealthEProConfig(
         organization_id=int(
-            os.getenv(
-                "HEP_ORG_ID",
-                "2221",
-            )
+            os.environ["HEP_ORG_ID"]
         ),
         site_id=int(
-            os.getenv(
-                "HEP_SITE_ID",
-                "14158",
-            )
+            os.envrion["HEP_SITE_ID"]
         ),
         menu_id=int(
-            os.getenv(
-                "HEP_MENU_ID",
-                "125015",
-            )
+            os.environ["HEP_MENU_ID"]
         ),
     )
 
