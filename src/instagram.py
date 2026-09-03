@@ -10,8 +10,7 @@ import requests
 
 LOG = logging.getLogger(__name__)
 GRAPH_VERSION = os.getenv("META_GRAPH_VERSION", "v23.0")
-GRAPH = f"https://graph.facebook.com/{GRAPH_VERSION}"
-
+GRAPH = f"https://graph.instagram.com/{GRAPH_VERSION}"
 
 class InstagramPublishError(RuntimeError):
     pass
