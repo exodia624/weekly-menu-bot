@@ -185,7 +185,7 @@ def main() -> None:
             os.environ["HEP_ORG_ID"]
         ),
         site_id=int(
-            os.envrion["HEP_SITE_ID"]
+            os.environ["HEP_SITE_ID"]
         ),
         menu_id=int(
             os.environ["HEP_MENU_ID"]
