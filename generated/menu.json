@@ -1,0 +1,170 @@
+{
+  "week_start": "2026-09-07",
+  "days": [
+    {
+      "date": "2026-09-07",
+      "weekday": "Monday",
+      "no_school": true,
+      "note": "Labor Day",
+      "categories": {}
+    },
+    {
+      "date": "2026-09-08",
+      "weekday": "Tuesday",
+      "no_school": false,
+      "note": null,
+      "categories": {
+        "Lunch Entree": [
+          "Mesa Robles Carne Asada Fries (2.25 MMA, 1/2 C Veg",
+          "Mesa Robles Meatless Asada Fries",
+          "Spicy Chicken Sandwich",
+          "Chicken Sandwich (2 MMA, 3 WG)",
+          "Chicken Bacon Ranch Pizza",
+          "Vegetarian Pizza",
+          "Pesto Chicken Salad Wrap",
+          "Fruit Parfait",
+          "Chef's Salad w/ Dinner roll"
+        ],
+        "Vegetables": [
+          "Seasonal Vegetables - 1/2 Cup",
+          "Sub Salad"
+        ],
+        "Fruit": [
+          "Seasonal Fruit Variety"
+        ],
+        "Grains": [
+          "Dinner Roll (2 WG)"
+        ],
+        "Milk": [
+          "1%  White Milk, 8oz",
+          "Fat Free Chocolate Milk"
+        ],
+        "Condiments": [
+          "Ketchup Packet",
+          "Mayonnaise Packet",
+          "Mustard Packet",
+          "Tapatio Hot Sauce Packet",
+          "Italian Dressing",
+          "Buttermilk Ranch Dressing"
+        ]
+      }
+    },
+    {
+      "date": "2026-09-09",
+      "weekday": "Wednesday",
+      "no_school": false,
+      "note": null,
+      "categories": {
+        "Lunch Entree": [
+          "Carnitas Burrito",
+          "Veggie Crumble Burrito",
+          "Sausage Pizza",
+          "Cheese Pizza",
+          "Ham & Cheese Croissant",
+          "Vegetarian Kick'n Chicken Wrap",
+          "Antipasto Salad w/ Dinner Roll",
+          "Protein Grab-n-Go"
+        ],
+        "Vegetables": [
+          "Seasonal Vegetables - 1/2 Cup",
+          "Sub Salad"
+        ],
+        "Fruit": [
+          "Seasonal Fruit Variety",
+          "Juice Variety 4oz"
+        ],
+        "Milk": [
+          "1%  White Milk, 8oz",
+          "Fat Free Chocolate Milk"
+        ],
+        "Misc.": [
+          "Chips, Potato, Classic, 104/ 1oz, Lay's 11045"
+        ],
+        "Condiments": [
+          "Ketchup Packet",
+          "Mayonnaise Packet",
+          "Mustard Packet",
+          "Tapatio Hot Sauce Packet",
+          "Italian Dressing",
+          "Buttermilk Ranch Dressing"
+        ]
+      }
+    },
+    {
+      "date": "2026-09-10",
+      "weekday": "Thursday",
+      "no_school": false,
+      "note": null,
+      "categories": {
+        "Lunch Entree": [
+          "Cheeseburger (2.75 MMA, 2WG)",
+          "Hamburger",
+          "Chicken Dumpling Bowl",
+          "Veggie Dumpling Bowl",
+          "WIHS Jalapeno Bacon Pizza",
+          "Vegetarian Pizza",
+          "Snack-cuterie Tray",
+          "Street Corn Pasta Salad",
+          "Fruit Parfait"
+        ],
+        "Vegetables": [
+          "Potato Wedges - 1/2 Cup",
+          "Sub Salad"
+        ],
+        "Fruit": [
+          "Seasonal Fruit Variety"
+        ],
+        "Milk": [
+          "1%  White Milk, 8oz",
+          "Fat Free Chocolate Milk"
+        ],
+        "Condiments": [
+          "Ketchup Packet",
+          "Mayonnaise Packet",
+          "Mustard Packet",
+          "Tapatio Hot Sauce Packet",
+          "Italian Dressing",
+          "Buttermilk Ranch Dressing"
+        ]
+      }
+    },
+    {
+      "date": "2026-09-11",
+      "weekday": "Friday",
+      "no_school": false,
+      "note": null,
+      "categories": {
+        "Lunch Entree": [
+          "Spicy Chicken Sandwich",
+          "Chicken Sandwich (2 MMA, 3 WG)",
+          "Black Bean Burger",
+          "Cheese Pull Aparts (2 MMA, 2 WG)",
+          "Chicken  Salad Croissant Sandwich",
+          "PB & J Combo",
+          "Protein Grab-n-Go"
+        ],
+        "Vegetables": [
+          "Baby Carrots - 1/2 Cup",
+          "Seasonal Vegetables - 1/2 Cup"
+        ],
+        "Fruit": [
+          "Seasonal Fruit Variety",
+          "Juice Variety 4oz"
+        ],
+        "Desserts": [
+          "Brownie"
+        ],
+        "Milk": [
+          "1%  White Milk, 8oz",
+          "Fat Free Chocolate Milk"
+        ],
+        "Condiments": [
+          "Ketchup Packet",
+          "Mayonnaise Packet",
+          "Mustard Packet",
+          "Tapatio Hot Sauce Packet"
+        ]
+      }
+    }
+  ]
+}
