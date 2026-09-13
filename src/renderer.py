@@ -187,16 +187,27 @@ def _category_order(
         "Fruit",
     ]
 
+    # Categories to not show
+    hidden = {
+        "condiments",
+    }
+
     result: list[tuple[str, list[str]]] = []
     used: set[str] = set()
 
     for preferred_name in preferred:
         for key, value in categories.items():
+            if key.lower() in hidden:
+                continue
+
             if key.lower() == preferred_name.lower():
                 result.append((key, value))
                 used.add(key)
 
     for key, value in categories.items():
+        if key.lower() in hidden:
+            continue
+
         if key not in used:
             result.append((key, value))
 
