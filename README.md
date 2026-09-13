@@ -1,37 +1,49 @@
 # Weekly Menu Bot
 
-An automated system that retrieves my school's online lunch menu and transforms the weekly menu data into polished JPG graphics ready to be uploaded each week.
+Weekly Menu Bot is a project I made to automatically get my school's weekly lunch menu, organize the menu data, and turn it into Instagram graphics that can be posted for students.
 
-The project was developed in part for my community service group's effort to reduce food waste on campus. By making weekly lunch options easier for students to see ahead of time, the project aims to help students choose the correct lunch line and avoid taking meals they do not want that may ultimately be thrown away.
+I originally started working on this because of my community service group's project on reducing food waste at school. One of the problems we noticed was that students don't always know what food is being served before getting lunch. The district does have an online menu, but it isn't something that everyone checks regularly.
 
-## Overview
+Our original solution was making an Instagram page and manually creating the menu posts each week. This worked, but it also meant that someone had to check the menu, copy everything over, change all the dates, and make the graphics every week. I realized that most of this process could probably be automated, which is what eventually became this project.
 
-Updating a weekly school lunch menu manually involves checking menu data, copying items into graphics, updating dates, formatting each slide, and preparing the final post.
+## What It Does
 
-**Weekly Menu Bot automates that process.**
+The basic process is:
 
-The pipeline:
+```text
+Health-e Pro
+     ↓
+Retrieve menu data
+     ↓
+Parse and organize the menu
+     ↓
+Generate Instagram graphics
+     ↓
+GitHub Actions
+     ↓
+Instagram carousel
+```
 
-**Health-e Pro → Python → Dynamic Graphics → GitHub Actions → Instagram**
-
-Each run generates:
+For each school week, the program creates six images:
 
 1. Weekly cover
-2. Monday menu
-3. Tuesday menu
-4. Wednesday menu
-5. Thursday menu
-6. Friday menu
+2. Monday
+3. Tuesday
+4. Wednesday
+5. Thursday
+6. Friday
 
-The graphics use reusable Canva-designed backgrounds while Python dynamically inserts the current menu information.
+The cover also includes a food waste fact, while each weekday image shows the food being served that day.
 
-## Features
+The backgrounds were originally designed in Canva. Python then adds the changing information such as dates, weekdays, categories, and food items.
 
-### Automated Menu Retrieval
+## How the Menu Data Works
 
-The bot retrieves the upcoming week's lunch information from Health-e Pro and automatically resolves menu items and categories.
+My school uses Health-e Pro for its online lunch menu.
 
-It supports categories such as:
+Instead of manually copying the information from the website, the program retrieves the menu data directly and then processes it in Python.
+
+The parser organizes items into categories such as:
 
 - Lunch Entree
 - Vegetables
@@ -40,40 +52,55 @@ It supports categories such as:
 - Desserts
 - Milk
 - Miscellaneous
-- Condiments
 
-The parser also detects days when school is not in session.
+Condiments can also exist in the original menu data, but I chose not to display them on the Instagram graphics because they aren't really useful for students trying to see what the main lunch options are.
 
-### Dynamic Graphic Generation
+The parser can also detect days where there is no school.
 
-Menu slides are rendered with Python and Pillow using reusable 1080 × 1350 templates.
+## Graphic Generation
 
-The renderer automatically handles:
+The graphics are generated using Pillow.
 
-- Weekday and date placement
-- Menu categories
-- Bullet-pointed food items
-- Text wrapping
-- Dynamic font sizing
-- Variable menu lengths
-- No-school days
-- Missing/unpublished menus
+Each background is 1080 × 1350, which gives the posts a vertical Instagram format. The backgrounds contain the artwork and decorations, while Python draws the actual menu information on top.
 
-This allows the same templates to be reused every week without manually editing the graphics.
+One of the harder parts of this project was that every day's menu is a different length. Some days might have only a few items while another day can have a lot more.
 
-### Weekly Food-Waste Facts
+Because of this, the renderer can't just use the exact same text size and spacing every time. It measures the content and adjusts things such as:
 
-Each cover includes a quantitative food-waste fact.
+- Text size
+- Line wrapping
+- Category spacing
+- Menu item spacing
+- Available vertical space
 
-A deterministic weekly randomizer selects from a collection of facts, meaning:
+This lets the same set of backgrounds work for different weeks without me having to manually reposition everything.
 
-- Different weeks can receive different facts
-- Regenerating the same week produces the same fact
-- Results remain reproducible during testing
+The green title and weekday text uses the Chewy font, while the rest of the text uses a simpler font so longer menu items are still easy to read.
 
-### Automated Carousel Assembly
+## Food Waste Facts
 
-Generated images use numbered filenames:
+The cover includes a food waste fact each week.
+
+The fact is selected based on the Monday date of that week. This means different weeks can get different facts, but generating the same week again will give the same fact instead of randomly changing it every time.
+
+I did this mainly so previews and tests stay consistent.
+
+## Instagram Publishing
+
+The project can publish the six generated images as one Instagram carousel using Meta's Instagram API.
+
+The order is always:
+
+```text
+Cover
+Monday
+Tuesday
+Wednesday
+Thursday
+Friday
+```
+
+The generated files are also numbered to keep this order:
 
 ```text
 01-cover.jpg
@@ -84,39 +111,48 @@ Generated images use numbered filenames:
 06-friday.jpg
 ```
 
-The publishing pipeline also explicitly sorts these files before creating the carousel, ensuring that the cover is always first and the weekdays remain in chronological order.
+Instagram credentials are not stored in the code or uploaded to the public repository. They are stored using GitHub Actions secrets.
 
-### GitHub Actions Automation
-
-GitHub Actions handles the automated workflow:
+The Instagram secrets used by the workflow are:
 
 ```text
-Retrieve menu data
-        ↓
-Parse menu
-        ↓
-Run tests
-        ↓
-Generate graphics
-        ↓
-Create preview artifact
-        ↓
-Publish carousel
+INSTAGRAM_ACCESS_TOKEN
+INSTAGRAM_USER_ID
 ```
 
-Preview runs can be performed without Instagram credentials, allowing graphics and menu data to be checked before anything is published.
+The Health-e Pro configuration values are also stored as GitHub secrets:
 
-## Technology
+```text
+HEP_ORG_ID
+HEP_SITE_ID
+HEP_MENU_ID
+```
 
-| Technology | Purpose |
-|---|---|
-| Python | Core automation |
-| Pillow | Dynamic image rendering |
-| Requests | Health-e Pro and API communication |
-| GitHub Actions | Automated execution and testing |
-| Pytest | Parser testing |
-| Meta Graph API | Instagram carousel publishing |
-| Canva | Original graphic/template design |
+This allows the workflow to use the values without putting them directly inside the public source code.
+
+## GitHub Actions
+
+I use GitHub Actions so the program can run without needing my computer to stay on.
+
+The workflow runs the main parts of the project:
+
+```text
+Run tests
+    ↓
+Retrieve menu
+    ↓
+Generate graphics
+    ↓
+Upload preview
+    ↓
+Commit public image files when publishing
+    ↓
+Publish Instagram carousel
+```
+
+I can also manually run the workflow without publishing anything. This lets me download the generated images and check that everything looks right before making an Instagram post.
+
+Currently, scheduled runs are kept in preview mode while manual workflow runs can be used for publishing.
 
 ## Project Structure
 
@@ -136,9 +172,20 @@ weekly-menu-bot/
 │   │   ├── thursday.png
 │   │   └── friday.png
 │   │
+│   ├── fonts/
+│   │   ├── Chewy-Regular.ttf
+│   │   └── LICENSE.txt
+│   │
 │   └── source/
+│       ├── cover.png
+│       ├── monday.png
+│       ├── tuesday.png
+│       ├── wednesday.png
+│       ├── thursday.png
+│       └── friday.png
 │
 ├── generated/
+│   ├── .gitkeep
 │   ├── 01-cover.jpg
 │   ├── 02-monday.jpg
 │   ├── 03-tuesday.jpg
@@ -148,6 +195,7 @@ weekly-menu-bot/
 │   └── menu.json
 │
 ├── src/
+│   ├── __init__.py
 │   ├── healthepro.py
 │   ├── instagram.py
 │   ├── main.py
@@ -155,193 +203,119 @@ weekly-menu-bot/
 │   └── renderer.py
 │
 ├── tests/
+│   ├── __init__.py
 │   └── test_menu_parser.py
 │
 ├── .env.example
+├── .gitignore
 ├── requirements.txt
 └── README.md
 ```
 
-## How It Works
+## Main Files
 
-### 1. Determine the Week
+### `src/healthepro.py`
 
-The program identifies the upcoming Monday through Friday.
+Handles requests to Health-e Pro and retrieves the menu information needed by the program.
 
-A specific Monday can also be supplied for testing.
+### `src/menu_parser.py`
 
-### 2. Retrieve Menu Data
+Takes the Health-e Pro data and converts it into a simpler structure organized by date and menu category.
 
-The bot communicates with Health-e Pro to retrieve the menu information required for the selected week.
+It also handles things such as recipe names, duplicate items, and no-school days.
 
-Configuration identifiers are intentionally omitted from this README.
+### `src/renderer.py`
 
-### 3. Parse the Menu
+Takes the parsed menu and creates the actual JPG graphics using the background templates and Pillow.
 
-Health-e Pro's daily settings contain structured menu information.
+This is also where text wrapping, font sizing, positioning, colors, and the weekly food waste fact are handled.
 
-The parser:
+### `src/instagram.py`
 
-- Identifies menu categories
-- Resolves recipe IDs into names
-- Removes duplicate items
-- Organizes meals by day
-- Detects no-school days
+Handles communication with Instagram's API.
 
-The resulting structured menu is also written to:
+It creates each carousel item, creates the carousel container, and then publishes the finished carousel.
 
-```text
-generated/menu.json
-```
+### `src/main.py`
 
-### 4. Render the Graphics
+Connects the different parts of the project together and controls the overall process.
 
-Pillow combines the menu information with the corresponding background template.
+## Running the Project
 
-The renderer adjusts text size and wrapping to accommodate differences in the number and length of menu items each day.
-
-### 5. Assemble the Carousel
-
-The final carousel is explicitly ordered:
-
-```text
-Cover
-Monday
-Tuesday
-Wednesday
-Thursday
-Friday
-```
-
-### 6. Run Through GitHub Actions
-
-The entire process can run remotely through GitHub Actions, meaning the automation does not require a computer to remain running.
-
-## Running Locally
-
-Create a virtual environment:
-
-```bash
-python -m venv .venv
-source .venv/bin/activate
-```
-
-Install dependencies:
+First install the dependencies:
 
 ```bash
 pip install -r requirements.txt pytest
 ```
 
-Run the tests:
+Run the tests with:
 
 ```bash
 pytest -q
 ```
 
-Generate a preview:
+A specific Monday can be used to generate a week:
 
 ```bash
 WEEK_START=YYYY-MM-DD DRY_RUN=true python -m src.main
 ```
 
-The selected date must be a Monday.
+`WEEK_START` should be a Monday.
 
-Generated graphics will appear inside:
+The generated images and parsed menu information are placed in:
 
 ```text
 generated/
 ```
 
-## Testing With GitHub Actions
+## Testing Through GitHub Actions
 
-The workflow can also be triggered manually:
+To generate a preview without posting it:
 
-1. Open **Actions**
-2. Select **Weekly Lunch Menu**
-3. Select **Run workflow**
-4. Enter an optional Monday
-5. Leave publishing disabled
-6. Run the workflow
-7. Download the generated preview artifact
+1. Go to the **Actions** tab.
+2. Select **Weekly Lunch Menu**.
+3. Click **Run workflow**.
+4. Enter a Monday if a specific week is needed, or leave it blank.
+5. Leave **Publish to Instagram** disabled.
+6. Run the workflow.
+7. Download the `weekly-menu-preview` artifact.
 
-This allows the complete pipeline to be tested without publishing anything publicly.
+This is the main way I check the graphics before actually publishing them.
 
-## Instagram Publishing
+## Technology Used
 
-The project contains support for publishing the generated images as an Instagram carousel through Meta's API.
+| Technology | What I Used It For |
+|---|---|
+| Python | Main automation |
+| Pillow | Creating the menu graphics |
+| Requests | API and menu requests |
+| GitHub Actions | Running the automation remotely |
+| Pytest | Testing the menu parser |
+| Instagram API | Publishing the carousel |
+| Canva | Designing the original graphics |
 
-Credentials are stored as GitHub Actions secrets rather than committed to the repository:
+## Why I Built It
 
-```text
-INSTAGRAM_ACCESS_TOKEN
-INSTAGRAM_USER_ID
-```
+The main reason I built this wasn't just to automate an Instagram post.
 
-Access tokens and account identifiers should never be committed to the repository.
+My community service group was working on ways to reduce food waste at school. We first focused on making the weekly menu easier for students to find, but maintaining the Instagram page manually also took time away from some of our larger ideas, including composting food waste and creating a garden.
 
-The workflow is designed so generation can be tested independently before live publishing is enabled.
+Since I already knew Python, I wanted to see if I could automate the repetitive part instead.
 
-## Health-e Pro Configuration
+I spent time figuring out how the school's menu website stored its information, how to turn that information into something Python could use, and eventually how to automatically generate the graphics. After that, I expanded it so GitHub Actions could run the project and Instagram could receive the finished carousel.
 
-The deployment uses organization-, site-, and menu-specific identifiers.
+What started as a pretty simple idea of posting the lunch menu ended up combining coding, APIs, graphic design, automation, and our food waste project.
 
-These values have been intentionally omitted from the public documentation.
+## Possible Improvements
 
-```text
-Organization ID: [hidden]
-Site ID:         [hidden]
-Menu ID:         [hidden]
-```
+There are still some things I could improve later, including:
 
-Menu:
-
-```text
-2026-27 HS Lunch
-```
-
-## Design Considerations
-
-One challenge was that menu length changes significantly from day to day.
-
-Using fixed-size text could either create excessive empty space on short menus or cause longer menus to overlap decorative elements.
-
-The renderer therefore measures the menu before drawing it and selects an appropriate font size and spacing based on the available vertical space.
-
-The templates and rendering coordinates were also designed to preserve the original decorative artwork while keeping dynamically generated information readable.
-
-## Reliability & Safety
-
-Several safeguards are built into the project:
-
-- Instagram publishing can be disabled with `DRY_RUN`
-- Scheduled runs currently support preview-first operation
-- Menu parsing handles missing data
-- No-school days are detected automatically
-- API requests retry after temporary failures
-- Generated carousel order is explicitly enforced
-- Automated parser tests run before image generation
-- Instagram credentials are kept outside the source code
-
-## Future Improvements
-
-Potential improvements include:
-
-- Fully enabling scheduled Instagram publishing
-- Additional tests for unusual Health-e Pro responses
-- Automatic validation of generated graphics
-- Expanded food-waste fact sources
-- Improved monitoring and failure notifications
-- Additional menu/template configurations
-
-## Why I Built This
-
-At my school, different lunch lines serve different meals, and students may not know what each line is serving until they receive their food. This can result in students getting meals they did not want and throwing them away.
-
-As part of my community service group's efforts to reduce food waste on campus, I wanted to make the weekly lunch menu more accessible to students. Instead of manually checking the school's menu website and creating new graphics every week, I built a system that retrieves the menu data and automatically converts it into consistent, social-media-ready graphics.
-
-By automating the process, the menus can be shared with students each week with minimal manual work, helping students know their lunch options before getting in line and supporting our broader goal of reducing avoidable food waste.
-
-The project combines **software automation, web data retrieval, graphic design, and community service** to address the practical problem of food waste at my school.
+- Fully automated scheduled Instagram posting
+- More tests for unusual or missing menu data
+- Better detection of problems in generated graphics
+- More food waste facts and sources
+- Notifications when an automated run fails
+- Support for other menu designs or schools
 
 ## Font
 
