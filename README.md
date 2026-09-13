@@ -342,3 +342,9 @@ As part of my community service group's efforts to reduce food waste on campus, 
 By automating the process, the menus can be shared with students each week with minimal manual work, helping students know their lunch options before getting in line and supporting our broader goal of reducing avoidable food waste.
 
 The project combines **software automation, web data retrieval, graphic design, and community service** to address the practical problem of food waste at my school.
+
+## Font
+
+This project uses the Chewy typeface from Google Fonts.
+
+Chewy is distributed under the Apache License 2.0. See `assets/fonts/LICENSE.txt` for the full license text.
