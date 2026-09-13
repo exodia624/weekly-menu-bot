@@ -1,27 +1,55 @@
 {
-  "week_start": "2026-09-07",
+  "week_start": "2026-09-14",
   "days": [
     {
-      "date": "2026-09-07",
+      "date": "2026-09-14",
       "weekday": "Monday",
-      "no_school": true,
-      "note": "Labor Day",
-      "categories": {}
+      "no_school": false,
+      "note": null,
+      "categories": {
+        "Lunch Entree": [
+          "Grilled Ham & Cheese Sandwich",
+          "Grilled Cheese Sandwich (2 MMA/2WG)",
+          "Pepperoni Pizza",
+          "Cheese Pizza",
+          "Spicy Chicken Lavash Wrap",
+          "PB & J Combo",
+          "Kick'n Veggie Salad w/ Dinner Roll",
+          "Protein Grab-n-Go"
+        ],
+        "Vegetables": [
+          "Seasonal Vegetables - 1/2 Cup",
+          "Sub Salad"
+        ],
+        "Fruit": [
+          "Seasonal Fruit Variety",
+          "Juice Variety 4oz"
+        ],
+        "Milk": [
+          "1%  White Milk, 8oz",
+          "Fat Free Chocolate Milk"
+        ],
+        "Condiments": [
+          "Tapatio Hot Sauce Packet",
+          "Italian Dressing",
+          "Buttermilk Ranch Dressing"
+        ]
+      }
     },
     {
-      "date": "2026-09-08",
+      "date": "2026-09-15",
       "weekday": "Tuesday",
       "no_school": false,
       "note": null,
       "categories": {
         "Lunch Entree": [
-          "Mesa Robles Carne Asada Fries (2.25 MMA, 1/2 C Veg",
-          "Mesa Robles Meatless Asada Fries",
+          "Carnitas Nacho Bowl (3.5 MMA, 2.5 WG)",
+          "Vegetarian Nacho Bowl",
           "Spicy Chicken Sandwich",
           "Chicken Sandwich (2 MMA, 3 WG)",
           "Chicken Bacon Ranch Pizza",
           "Vegetarian Pizza",
-          "Pesto Chicken Salad Wrap",
+          "Chicken Salad Wrap",
           "Fruit Parfait",
           "Chef's Salad w/ Dinner roll"
         ],
@@ -31,9 +59,6 @@
         ],
         "Fruit": [
           "Seasonal Fruit Variety"
-        ],
-        "Grains": [
-          "Dinner Roll (2 WG)"
         ],
         "Milk": [
           "1%  White Milk, 8oz",
@@ -50,18 +75,17 @@
       }
     },
     {
-      "date": "2026-09-09",
+      "date": "2026-09-16",
       "weekday": "Wednesday",
       "no_school": false,
       "note": null,
       "categories": {
         "Lunch Entree": [
-          "Carnitas Burrito",
-          "Veggie Crumble Burrito",
-          "Sausage Pizza",
+          "Breaded Chicken Drumstick with Brown Rice (2 MMA, 2.75 WG)",
+          "BBQ Pork Sandwich",
+          "Spicy Hawaiian Pizza",
           "Cheese Pizza",
-          "Ham & Cheese Croissant",
-          "Vegetarian Kick'n Chicken Wrap",
+          "Quinoa Salad",
           "Antipasto Salad w/ Dinner Roll",
           "Protein Grab-n-Go"
         ],
@@ -77,13 +101,7 @@
           "1%  White Milk, 8oz",
           "Fat Free Chocolate Milk"
         ],
-        "Misc.": [
-          "Chips, Potato, Classic, 104/ 1oz, Lay's 11045"
-        ],
         "Condiments": [
-          "Ketchup Packet",
-          "Mayonnaise Packet",
-          "Mustard Packet",
           "Tapatio Hot Sauce Packet",
           "Italian Dressing",
           "Buttermilk Ranch Dressing"
@@ -91,7 +109,7 @@
       }
     },
     {
-      "date": "2026-09-10",
+      "date": "2026-09-17",
       "weekday": "Thursday",
       "no_school": false,
       "note": null,
@@ -99,13 +117,12 @@
         "Lunch Entree": [
           "Cheeseburger (2.75 MMA, 2WG)",
           "Hamburger",
-          "Chicken Dumpling Bowl",
-          "Veggie Dumpling Bowl",
-          "WIHS Jalapeno Bacon Pizza",
+          "Crispy Fish Burger (2.75 MMA, 2 WG)",
+          "BBQ Chicken Pizza",
           "Vegetarian Pizza",
-          "Snack-cuterie Tray",
-          "Street Corn Pasta Salad",
-          "Fruit Parfait"
+          "Spicy Chicken Lavash Wrap",
+          "Fruit Parfait",
+          "Chef's Salad w/ Dinner roll"
         ],
         "Vegetables": [
           "Potato Wedges - 1/2 Cup",
@@ -118,6 +135,10 @@
           "1%  White Milk, 8oz",
           "Fat Free Chocolate Milk"
         ],
+        "Misc.": [
+          "Funyuns Onion Rings",
+          "String Cheese (1 MA)"
+        ],
         "Condiments": [
           "Ketchup Packet",
           "Mayonnaise Packet",
@@ -129,23 +150,23 @@
       }
     },
     {
-      "date": "2026-09-11",
+      "date": "2026-09-18",
       "weekday": "Friday",
       "no_school": false,
       "note": null,
       "categories": {
         "Lunch Entree": [
-          "Spicy Chicken Sandwich",
-          "Chicken Sandwich (2 MMA, 3 WG)",
-          "Black Bean Burger",
+          "Chicken Wings w/ dinner roll",
           "Cheese Pull Aparts (2 MMA, 2 WG)",
-          "Chicken  Salad Croissant Sandwich",
+          "Beef Dip Sandwich",
           "PB & J Combo",
-          "Protein Grab-n-Go"
+          "Protein Grab-n-Go",
+          "Chicken Ranch Salad w/ Dinner Roll",
+          "Kick'n Veggie Salad w/ Dinner Roll"
         ],
         "Vegetables": [
-          "Baby Carrots - 1/2 Cup",
-          "Seasonal Vegetables - 1/2 Cup"
+          "Seasonal Vegetables - 1/2 Cup",
+          "Baby Carrots - 1/2 Cup"
         ],
         "Fruit": [
           "Seasonal Fruit Variety",
@@ -159,10 +180,7 @@
           "Fat Free Chocolate Milk"
         ],
         "Condiments": [
-          "Ketchup Packet",
-          "Mayonnaise Packet",
-          "Mustard Packet",
-          "Tapatio Hot Sauce Packet"
+          "General Tso Sauce"
         ]
       }
     }
