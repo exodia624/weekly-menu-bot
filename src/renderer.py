@@ -11,6 +11,7 @@ from .menu_parser import MenuDay, WeeklyMenu
 
 ROOT = Path(__file__).resolve().parents[1]
 BACKGROUNDS = ROOT / "assets" / "backgrounds"
+FONTS = ROOT / "assets" / "fonts"
 GENERATED = ROOT / "generated"
 
 GREEN = (39, 112, 66)
@@ -70,6 +71,16 @@ def _font(
 
     return ImageFont.load_default()
 
+def _display_font(
+    size: int,
+) -> ImageFont.FreeTypeFont | ImageFont.ImageFont:
+    try:
+        return ImageFont.truetype(
+            FONTS / "Chewy-Regular.ttf",
+            size,
+        )
+    except OSError:
+        return _font(size)
 
 def _fit_font(
     draw: ImageDraw.ImageDraw,
@@ -77,9 +88,10 @@ def _fit_font(
     max_width: int,
     start: int,
     minimum: int = 24,
+    font_loader=_font,
 ) -> ImageFont.ImageFont:
     for size in range(start, minimum - 1, -2):
-        font = _font(size)
+        font = font_loader(size)
 
         bbox = draw.textbbox(
             (0, 0),
@@ -90,7 +102,7 @@ def _fit_font(
         if bbox[2] - bbox[0] <= max_width:
             return font
 
-    return _font(minimum)
+    return font_loader(minimum)
 
 
 def _wrap(
@@ -374,8 +386,9 @@ def render_cover(
         draw,
         title,
         max_width=850,
-        start=112,
+        start=120,
         minimum=80,
+        font_loader=_display_font,
     )
 
     title_bbox = draw.textbbox(
@@ -578,8 +591,9 @@ def render_day(
         draw,
         weekday_text,
         max_width=weekday_width - 20,
-        start=104,
+        start=110,
         minimum=54,
+        font_loader=_display_font,
     )
 
     date_font = _fit_font(
