@@ -1,24 +1,24 @@
 {
-  "week_start": "2026-09-21",
+  "week_start": "2026-09-28",
   "days": [
     {
-      "date": "2026-09-21",
+      "date": "2026-09-28",
       "weekday": "Monday",
       "no_school": false,
       "note": null,
       "categories": {
         "Lunch Entree": [
-          "Chicken Tamale Plate",
-          "Cheese Tamale Plate",
+          "Meatball Sub Sandwich (3 MMA, 2 WG)",
+          "Veggie Sub Sandwich",
           "Pepperoni Pizza",
-          "Cheese Pizza",
-          "Spicy Chicken Lavash Wrap",
+          "Vegetarian Pizza",
+          "Spicy Chicken Wrap",
           "PB & J Combo",
           "Kick'n Veggie Salad w/ Dinner Roll",
           "Protein Grab-n-Go"
         ],
         "Vegetables": [
-          "Seasonal Vegetables - 1/2 Cup",
+          "Seasonal Vegetables",
           "Sub Salad"
         ],
         "Fruit": [
@@ -40,20 +40,20 @@
       }
     },
     {
-      "date": "2026-09-22",
+      "date": "2026-09-29",
       "weekday": "Tuesday",
       "no_school": false,
       "note": null,
       "categories": {
         "Lunch Entree": [
-          "Birria Taco Plate",
-          "Veggie Taco Plate",
+          "Chicken Burrito Bowl (2.75 MMA, 2WG)",
+          "Beyond Meat Burrito Bowl",
+          "Spicy Hawaiian Pizza",
+          "Cheese Pizza",
           "Spicy Chicken Sandwich",
           "Chicken Sandwich (2 MMA, 3 WG)",
-          "Chicken Bacon Ranch Pizza",
-          "Vegetarian Pizza",
+          "Chicken Salad Wrap",
           "Fruit Parfait",
-          "Snack-cuterie Tray",
           "Chef's Salad w/ Dinner roll"
         ],
         "Vegetables": [
@@ -75,26 +75,27 @@
           "Mayonnaise Packet",
           "Mustard Packet",
           "Tapatio Hot Sauce Packet",
-          "Italian Dressing",
-          "Buttermilk Ranch Dressing"
+          "Buttermilk Ranch Dressing",
+          "Italian Dressing"
         ]
       }
     },
     {
-      "date": "2026-09-23",
+      "date": "2026-09-30",
       "weekday": "Wednesday",
       "no_school": false,
       "note": null,
       "categories": {
         "Lunch Entree": [
-          "Carne Asada Burrito",
-          "Sausage Pizza",
-          "Herb Roasted Chicken w/ rice",
-          "Cheese Pizza",
-          "Ham & Cheese Croissant",
-          "Vegetarian Kick'n Chicken Wrap",
+          "BBQ Pork Sandwich",
+          "BBQ Pork Mac & Cheese",
+          "Macaroni and Cheese (1.5 MMA, 1.5 WG)",
+          "Hot Honey Pepperoni Pizza",
+          "Vegetarian Pizza",
+          "Spicy Chicken Lavash Wrap",
           "Antipasto Salad w/ Dinner Roll",
-          "Protein Grab-n-Go"
+          "Protein Grab-n-Go",
+          "PB & J Combo"
         ],
         "Vegetables": [
           "Seasonal Vegetables - 1/2 Cup",
@@ -105,7 +106,7 @@
           "Juice Variety 4oz"
         ],
         "Grains": [
-          "Dinner Roll (2 WG)"
+          "Artisan Dinner Roll"
         ],
         "Milk": [
           "1%  White Milk, 8oz",
@@ -115,91 +116,24 @@
           "String Cheese (1 MA)"
         ],
         "Condiments": [
-          "Tapatio Hot Sauce Packet",
           "Italian Dressing",
           "Buttermilk Ranch Dressing"
         ]
       }
     },
     {
-      "date": "2026-09-24",
+      "date": "2026-10-01",
       "weekday": "Thursday",
       "no_school": false,
       "note": null,
-      "categories": {
-        "Lunch Entree": [
-          "Cheeseburger (2.75 MMA, 2WG)",
-          "Hamburger",
-          "Orange Chicken Bowl",
-          "Teriyaki Tofu Bowl w/ Broccoli",
-          "WIHS Jalapeno Bacon Pizza",
-          "Vegetarian Pizza",
-          "Fruit Parfait",
-          "Street Corn Pasta Salad",
-          "Chef's Salad w/ Dinner roll"
-        ],
-        "Vegetables": [
-          "Potato Wedges - 1/2 Cup",
-          "Sub Salad"
-        ],
-        "Fruit": [
-          "Seasonal Fruit Variety"
-        ],
-        "Milk": [
-          "1%  White Milk, 8oz",
-          "Fat Free Chocolate Milk"
-        ],
-        "Misc.": [
-          "String Cheese (1 MA)"
-        ],
-        "Condiments": [
-          "Ketchup Packet",
-          "Mayonnaise Packet",
-          "Mustard Packet",
-          "Tapatio Hot Sauce Packet",
-          "Italian Dressing",
-          "Buttermilk Ranch Dressing"
-        ]
-      }
+      "categories": {}
     },
     {
-      "date": "2026-09-25",
+      "date": "2026-10-02",
       "weekday": "Friday",
       "no_school": false,
       "note": null,
-      "categories": {
-        "Lunch Entree": [
-          "Pork Banh Mi Sandwich (2 MMA, 2 WG)",
-          "Tofu Banh Mi Sandwich",
-          "Spicy Chicken Sandwich",
-          "Chicken Sandwich (2 MMA, 3 WG)",
-          "Cheese Pull Aparts (2 MMA, 2 WG)",
-          "Chicken  Salad Croissant Sandwich",
-          "PB & J Combo",
-          "Protein Grab-n-Go"
-        ],
-        "Vegetables": [
-          "Baby Carrots - 1/2 Cup",
-          "Seasonal Vegetables - 1/2 Cup"
-        ],
-        "Fruit": [
-          "Seasonal Fruit Variety",
-          "Juice Variety 4oz"
-        ],
-        "Desserts": [
-          "Brownie"
-        ],
-        "Milk": [
-          "1%  White Milk, 8oz",
-          "Fat Free Chocolate Milk"
-        ],
-        "Condiments": [
-          "Ketchup Packet",
-          "Mayonnaise Packet",
-          "Mustard Packet",
-          "Tapatio Hot Sauce Packet"
-        ]
-      }
+      "categories": {}
     }
   ]
 }
