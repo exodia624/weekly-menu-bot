@@ -30,24 +30,51 @@ class HealthEProClient:
         self.session = requests.Session()
         self.session.headers.update({"User-Agent": "weekly-menu-bot/1.0"})
 
-    def _get_json(self, url: str) -> Any:
+    def _get_json(
+        self,
+        url: str,
+        allow_400_empty: bool = False,
+    ) -> Any:
         last_exc: Exception | None = None
+
         for attempt in range(3):
             try:
-                response = self.session.get(url, timeout=self.timeout)
+                response = self.session.get(
+                    url,
+                    timeout=self.timeout,
+                )
+
+                if allow_400_empty and response.status_code == 400:
+                    LOG.warning(
+                        "Health-e Pro returned 400 for optional data: %s",
+                        url,
+                    )
+                    return []
+
                 response.raise_for_status()
                 return response.json()
+
             except (requests.RequestException, ValueError) as exc:
                 last_exc = exc
-                LOG.warning("Health-e Pro request failed (attempt %s/3): %s", attempt + 1, exc)
-        raise HealthEProError(f"Unable to fetch Health-e Pro data: {last_exc}")
+                LOG.warning(
+                    "Health-e Pro request failed (attempt %s/3): %s",
+                    attempt + 1,
+                    exc,
+                )
+
+        raise HealthEProError(
+            f"Unable to fetch Health-e Pro data: {last_exc}"
+        )
 
     def date_overwrites(self, year: int, month: int) -> list[dict[str, Any]]:
         url = (
             f"{BASE}/organizations/{self.config.organization_id}/menus/"
             f"{self.config.menu_id}/year/{year}/month/{month}/date_overwrites"
         )
-        payload = self._get_json(url)
+        payload = self._get_json(
+            url,
+            allow_400_empty=True,
+        )
         data = payload.get("data", payload) if isinstance(payload, dict) else payload
         if not isinstance(data, list):
             raise HealthEProError("Unexpected date_overwrites response shape")
